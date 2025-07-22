@@ -14,11 +14,13 @@
     "dotenv": "^16.4.7",
     "knex": "^3.1.0",
     "pg": "^8.14.1",
-    "url-shortener": "file:"
+    "url-shortener": "file:",
+    "validatorjs": "^3.22.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.23.0",
     "@types/node": "^22.14.0",
+    "@types/validatorjs": "^3.15.5",
     "eslint": "^9.23.0",
     "globals": "^16.0.0",
     "nodemon": "^3.1.9",
