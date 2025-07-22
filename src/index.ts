@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import knex, { onDatabaseConnect } from './config/knex';
+import httpError from 'http-errors';
 
 const main = async () => {
   try {

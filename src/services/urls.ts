@@ -1,3 +1,4 @@
+import httpError from "http-errors";
 import knex from "../config/knex";
 import { validateCreateShortURL, validateUpdateShortURL } from "./validations";
 
@@ -17,7 +18,9 @@ validateCreateShortURL(body);
       .first();
 
     if (current_record) {
-      throw new Error("URL with this ID already exists for the user");
+      throw new httpError.Conflict(
+        "A URL with this ID already exists for this user"
+      );
     }
 
     const results = await knex("urls").insert(
@@ -36,11 +39,12 @@ validateCreateShortURL(body);
   return results[0];
 };
 
-export const resolveURL = async (id: string) => {
+export const resolveURL = async (id: string, ip: string) => {
   const url = await knex("urls").where({ id }).select("url").first();
   if (!url) {
-    throw new Error("URL not found");
+    throw new httpError.NotFound("URL not found");
   }
+  await registerVisit(id , ip);
   return url.url;
 };
 
@@ -52,11 +56,11 @@ export const updateURL = async (
 validateUpdateShortURL(body);
   const url = await knex("urls").where({ id }).select(["user_id"]).first();
   if (!url) {
-    throw new Error("URL not found");
+    throw new httpError.NotFound("URL not found");
   }
 
   if (url.user_id !== user_id) {
-    throw new Error("You do not have permission to update this URL");
+    throw new httpError.unauthorized("You do not have permission to update this URL");
   }
 
   const results = await knex("urls").where({ id }).update(
@@ -70,11 +74,11 @@ validateUpdateShortURL(body);
 export const deleteURL = async (id: string, user_id: number) => {
   const url = await knex("urls").where({ id }).select(["user_id"]).first();
   if (!url) {
-    throw new Error("URL not found");
+    throw new httpError.NotFound("URL not found");
   }
 
   if (url.user_id !== user_id) {
-    throw new Error("You do not have permission to delete this URL");
+    throw new httpError.unauthorized("You do not have permission to update this URL");
   }
 
   await knex("urls").where({ id }).delete();
@@ -88,8 +92,13 @@ export const getURLS = async (
 ) => {
   const results = await knex("urls")
     .where({ user_id })
+    .leftjoin("visits", "urls.id", "visits.url_id")
+    .select("urls.id", "urls.url", "urls.created_at",
+       knex.raw("COUNT(visits.id) as visit_count"))
     .limit(limit)
     .offset(offset);
+    .groupBy("urls.id");
+    .orderBy("urls.created_at", "desc");
 
   return results;
 };

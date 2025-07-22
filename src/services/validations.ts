@@ -1,5 +1,5 @@
 import Validator from 'validatorjs';
-
+import httpError from 'http-errors';
 
 type RequestBody = {[key : string]: any };
 const validateBody = 
@@ -11,7 +11,7 @@ const validateBody =
         Object.keys(errors).forEach((key) => {
             aggregratedErrors.push(validation.errors.first(key) as string); 
         });
-        throw new Error(aggregratedErrors.join(', '));
+        throw new httpError.BadRequest(aggregratedErrors.join(', '));
     } else {
 return true;
 }
