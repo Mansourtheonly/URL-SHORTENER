@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import Validator from 'validatorjs';
 import knex, { onDatabaseConnect } from './config/knex';
 
 const main = async () => {
