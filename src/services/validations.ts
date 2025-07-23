@@ -33,3 +33,7 @@ export const validateCreateShortURL = async (body : RequestBody) => validateBody
                 password: "string|required|min:6",
             });
             
+export const validateLogin = (body: RequestBody) => validateBody(body, {   
+    username : "string|required",
+            password : "string|required|",
+});
