@@ -1,6 +1,9 @@
 import httpError from "http-errors";
 import knex from "../config/knex";
 import { validateCreateShortURL, validateUpdateShortURL } from "./validations";
+import { registerVisit } from "./visits";
+
+
 
 type ShortURLBody = {
   url: string;
