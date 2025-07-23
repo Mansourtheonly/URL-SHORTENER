@@ -63,7 +63,7 @@ validateUpdateShortURL(body);
   }
 
   if (url.user_id !== user_id) {
-    throw new httpError.unauthorized("You do not have permission to update this URL");
+    throw new httpError.Unauthorized("You do not have permission to update this URL");
   }
 
   const results = await knex("urls").where({ id }).update(
@@ -81,7 +81,7 @@ export const deleteURL = async (id: string, user_id: number) => {
   }
 
   if (url.user_id !== user_id) {
-    throw new httpError.unauthorized("You do not have permission to update this URL");
+    throw new httpError.Unauthorized("You do not have permission to update this URL");
   }
 
   await knex("urls").where({ id }).delete();
@@ -95,13 +95,17 @@ export const getURLS = async (
 ) => {
   const results = await knex("urls")
     .where({ user_id })
-    .leftjoin("visits", "urls.id", "visits.url_id")
-    .select("urls.id", "urls.url", "urls.created_at",
-       knex.raw("COUNT(visits.id) as visit_count"))
+    .leftJoin("visits", "urls.id", "visits.url_id")
+    .select(
+      "urls.id",
+      "urls.url",
+      "urls.created_at",
+      knex.raw("COUNT(visits.id) as visit_count")
+    )
+    .groupBy("urls.id")
+    .orderBy("urls.created_at", "desc")
     .limit(limit)
     .offset(offset);
-    .groupBy("urls.id");
-    .orderBy("urls.created_at", "desc");
 
   return results;
 };

@@ -9,7 +9,7 @@ export const generateToken = async (payload : {[key : string] : any}) =>
 
     try{
    const content = jwt.verify(token , JWT_PRIVATE_KEY);
-   return content;
+   return content as  {[key : string] : any} ;
     }catch(e){
         throw new httpError.Unauthorized('please provide a valid JWT token');
     }
