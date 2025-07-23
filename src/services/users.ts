@@ -35,5 +35,15 @@ const passwordMatch = await comparePassword(body.password, user.password);
         if (!passwordMatch) {
             throw new httpError.Unauthorized("Invalid password");
         }
-        return user;
+        const token = await generateToken({ id: user.id});
+        return {
+        user : {
+            id : user.id,
+            username : user.username,  
+            created_at : user.created_at,
+            updated_at: user.updated_at,
+        
+        };
+                    token, 
+
     };
