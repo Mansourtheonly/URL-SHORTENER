@@ -15,7 +15,7 @@ export const register = async (body : {
              }
              const user = (await knex("users").insert({
             username: body.username.toLowerCase(),
-            password: body.password,
+            password: await hashPassword(body.password),
         }, 
 ["id", "username",]
 )

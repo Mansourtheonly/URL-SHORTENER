@@ -7,9 +7,8 @@ const main = async () => {
     await onDatabaseConnect();
     console.log('Connected to the database successfully!');
 
-    // Insert a new user and return all columns ("*")
-      const users = await knex("users").where("id", 1).select("*");
-console.log(users[0].password);
+const user = await register({username: 'testuser', password: 'password123'})
+console.log(user);
   } catch (e) {
     console.log(e);
   }
