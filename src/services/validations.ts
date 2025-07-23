@@ -25,3 +25,11 @@ export const validateCreateShortURL = async (body : RequestBody) => validateBody
         validateBody(body, {
             url: 'required|url',
         });
+
+
+        export const validateRegister = (body: RequestBody) =>
+            validateBody(body, {
+                username: "string|required|min:4|max:8",
+                password: "string|required|min:6",
+            });
+            
