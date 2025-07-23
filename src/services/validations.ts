@@ -18,7 +18,7 @@ return true;
     };
 export const validateCreateShortURL = async (body : RequestBody) => validateBody(body, {
     url: 'required|url',
-    id: "string|min:5|max:10",
+    id: "string|min:5|max:10|not_in:urls,visits,auth",
 });
 
     export const validateUpdateShortURL = async (body : RequestBody) => 
