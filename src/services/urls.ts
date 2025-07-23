@@ -90,8 +90,8 @@ export const deleteURL = async (id: string, user_id: number) => {
 
 export const getURLS = async (
   user_id: number,
-  limit: number = 15,
-  offset: number = 0
+  limit: number,
+  offset: number 
 ) => {
   const results = await knex("urls")
     .where({ user_id })
